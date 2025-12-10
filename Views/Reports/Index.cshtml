@@ -1,0 +1,52 @@
+﻿@{
+    ViewBag.Title = "Reports";
+}
+
+<h2 style="margin-bottom: 2rem; font-size: 2.5rem; font-weight: 700;">Reports & Analytics</h2>
+<p style="color: #6c6c6c; font-size: 1.125rem; margin-bottom: 3rem;">Select a report to view detailed insights and analytics.</p>
+
+<div class="row" style="margin-top: 30px;">
+    <div class="col-md-4">
+        <div style="background-color: #ffffff; border: 2px solid #e5e5e5; border-radius: 8px; padding: 2rem; margin-bottom: 2rem; transition: all 0.3s ease; height: 100%; display: flex; flex-direction: column;">
+            <div style="flex-grow: 1;">
+                <h4 style="font-size: 1.5rem; margin-bottom: 1rem; color: #000000; font-weight: 700;">📊 Best Selling Items</h4>
+                <p style="color: #4a4a4a; margin-bottom: 1.5rem; line-height: 1.6;">
+                    View the best-selling items based on quantity sold and revenue generated. Filter by date range to analyze trends.
+                </p>
+            </div>
+            @Html.ActionLink("View Report", "BestItems", null, new { @class = "btn btn-primary btn-block" })
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div style="background-color: #ffffff; border: 2px solid #e5e5e5; border-radius: 8px; padding: 2rem; margin-bottom: 2rem; transition: all 0.3s ease; height: 100%; display: flex; flex-direction: column;">
+            <div style="flex-grow: 1;">
+                <h4 style="font-size: 1.5rem; margin-bottom: 1rem; color: #000000; font-weight: 700;">👥 Customer Purchases</h4>
+                <p style="color: #4a4a4a; margin-bottom: 1.5rem; line-height: 1.6;">
+                    View all purchases made by customers with advanced filtering options by customer and date range.
+                </p>
+            </div>
+            @Html.ActionLink("View Report", "CustomerPurchases", null, new { @class = "btn btn-primary btn-block" })
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div style="background-color: #ffffff; border: 2px solid #e5e5e5; border-radius: 8px; padding: 2rem; margin-bottom: 2rem; transition: all 0.3s ease; height: 100%; display: flex; flex-direction: column;">
+            <div style="flex-grow: 1;">
+                <h4 style="font-size: 1.5rem; margin-bottom: 1rem; color: #000000; font-weight: 700;">🛒 Customer Purchase History</h4>
+                <p style="color: #4a4a4a; margin-bottom: 1.5rem; line-height: 1.6;">
+                    View all items purchased by a specific customer along with purchase statistics and history.
+                </p>
+            </div>
+            @Html.ActionLink("View Report", "ItemsPurchasedByCustomer", null, new { @class = "btn btn-primary btn-block" })
+        </div>
+    </div>
+</div>
+
+<style>
+    .col-md-4 > div:hover {
+        border-color: #000000 !important;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        transform: translateY(-4px);
+    }
+</style>

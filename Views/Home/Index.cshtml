@@ -1,0 +1,66 @@
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<main>
+    <section class="row" aria-labelledby="aspnetTitle" style="background-color: #ffffff; padding: 3rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); margin-bottom: 3rem;">
+        <div class="col-md-12">
+            <h1 id="title" style="font-size: 3rem; font-weight: 700; margin-bottom: 1rem;">Welcome to Order Management System</h1>
+            <p class="lead" style="font-size: 1.25rem; color: #6c6c6c;">A modern, efficient solution for managing your orders, products, and agents. Built with ASP.NET MVC for maximum performance and reliability.</p>
+            <p>
+                <a href="@Url.Action("Index", "Orders")" class="btn btn-primary btn-md" style="margin-right: 1rem;">
+                    <i class="fa fa-shopping-cart"></i> View Orders
+                </a>
+                <a href="@Url.Action("Index", "Reports")" class="btn btn-outline-dark btn-md">
+                    <i class="fa fa-chart-bar"></i> View Reports
+                </a>
+            </p>
+        </div>
+    </section>
+
+    <div class="row">
+        <section class="col-md-4" aria-labelledby="ordersTitle">
+            <div style="background-color: #ffffff; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); height: 100%; border: 2px solid #e5e5e5; transition: all 0.3s ease;">
+                <h2 id="ordersTitle" style="font-size: 1.5rem; margin-bottom: 1rem; color: #000000;">Order Management</h2>
+                <p style="color: #4a4a4a; margin-bottom: 1.5rem;">
+                    Create, edit, and manage orders with ease. Track order details, assign agents, and monitor order history all in one place.
+                </p>
+                <p>
+                    <a class="btn btn-default" href="@Url.Action("Index", "Orders")">Manage Orders &raquo;</a>
+                </p>
+            </div>
+        </section>
+        
+        <section class="col-md-4" aria-labelledby="productsTitle">
+            <div style="background-color: #ffffff; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); height: 100%; border: 2px solid #e5e5e5; transition: all 0.3s ease;">
+                <h2 id="productsTitle" style="font-size: 1.5rem; margin-bottom: 1rem; color: #000000;">Product Catalog</h2>
+                <p style="color: #4a4a4a; margin-bottom: 1.5rem;">
+                    Maintain your product inventory with detailed information. Add new products, update pricing, and manage stock levels effectively.
+                </p>
+                <p>
+                    <a class="btn btn-default" href="@Url.Action("Index", "Products")">View Products &raquo;</a>
+                </p>
+            </div>
+        </section>
+        
+        <section class="col-md-4" aria-labelledby="reportsTitle">
+            <div style="background-color: #ffffff; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); height: 100%; border: 2px solid #e5e5e5; transition: all 0.3s ease;">
+                <h2 id="reportsTitle" style="font-size: 1.5rem; margin-bottom: 1rem; color: #000000;">Analytics & Reports</h2>
+                <p style="color: #4a4a4a; margin-bottom: 1.5rem;">
+                    Get insights into your business with comprehensive reports. Track best-selling items, customer purchases, and sales trends.
+                </p>
+                <p>
+                    <a class="btn btn-default" href="@Url.Action("Index", "Reports")">View Reports &raquo;</a>
+                </p>
+            </div>
+        </section>
+    </div>
+
+    <style>
+        section > div:hover {
+            border-color: #000000 !important;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2) !important;
+        }
+    </style>
+</main>

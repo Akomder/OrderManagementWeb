@@ -1,0 +1,151 @@
+@model OrderManagementWeb.Order
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Report - @Model.OrderID</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            margin: 0;
+            color: #333;
+        }
+        .order-info {
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            padding: 15px;
+            background-color: #f9f9f9;
+        }
+        .order-info table {
+            width: 100%;
+        }
+        .order-info td {
+            padding: 5px;
+        }
+        .order-info td:first-child {
+            font-weight: bold;
+            width: 150px;
+        }
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .items-table th,
+        .items-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        .items-table th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .items-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .items-table tfoot td {
+            font-weight: bold;
+            background-color: #e0e0e0;
+        }
+        .text-right {
+            text-align: right;
+        }
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+        }
+        @@media print {
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>ORDER REPORT</h1>
+        <p>Order Management System</p>
+    </div>
+
+    <div class="order-info">
+        <table>
+            <tr>
+                <td>Order ID:</td>
+                <td>@Model.OrderID</td>
+            </tr>
+            <tr>
+                <td>Order Date:</td>
+                <td>@Model.OrderDate.ToString("MMMM dd, yyyy")</td>
+            </tr>
+            <tr>
+                <td>Agent Name:</td>
+                <td>@Model.Agent.AgentName</td>
+            </tr>
+            <tr>
+                <td>Agent Address:</td>
+                <td>@Model.Agent.Address</td>
+            </tr>
+        </table>
+    </div>
+
+    <h3>Order Items</h3>
+    <table class="items-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Item Name</th>
+                <th>Size</th>
+                <th class="text-right">Unit Price</th>
+                <th class="text-right">Quantity</th>
+                <th class="text-right">Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{ int index = 1; }
+            @foreach (var detail in Model.OrderDetails)
+            {
+                <tr>
+                    <td>@index</td>
+                    <td>@detail.Item.ItemName</td>
+                    <td>@detail.Item.Size</td>
+                    <td class="text-right">@detail.UnitAmount.ToString("C")</td>
+                    <td class="text-right">@detail.Quantity</td>
+                    <td class="text-right">@((detail.UnitAmount * detail.Quantity).ToString("C"))</td>
+                </tr>
+                index++;
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="5" class="text-right">Total Amount:</td>
+                <td class="text-right">@Model.OrderDetails.Sum(od => od.UnitAmount * od.Quantity).ToString("C")</td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <div class="footer">
+        <p>Printed on: @DateTime.Now.ToString("MMMM dd, yyyy hh:mm tt")</p>
+    </div>
+
+    <div class="no-print" style="margin-top: 20px; text-align: center;">
+        <button onclick="window.print()" class="btn btn-primary" style="padding: 10px 20px; font-size: 16px; cursor: pointer;">Print</button>
+        <button onclick="window.close()" style="padding: 10px 20px; font-size: 16px; cursor: pointer; margin-left: 10px;">Close</button>
+    </div>
+</body>
+</html>

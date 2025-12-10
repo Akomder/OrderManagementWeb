@@ -1,0 +1,172 @@
+@model OrderManagementWeb.Models.OrderViewModel
+
+@{
+    ViewBag.Title = "Edit Order";
+    var items = ViewBag.Items as List<OrderManagementWeb.Item>;
+}
+
+<h2>Edit Order</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.OrderID)
+
+    <div class="form-horizontal">
+        <h4>Order</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.OrderDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.OrderDate, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+                @Html.ValidationMessageFor(model => model.OrderDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.AgentID, "Agent", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("AgentID", null, "-- Select Agent --", htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.AgentID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-12">
+                <h4>Order Details</h4>
+                <div id="orderDetailsContainer">
+                    <div class="row order-detail-row" style="margin-bottom: 10px;">
+                        <div class="col-md-4">
+                            <label>Product</label>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Unit Price</label>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Quantity</label>
+                        </div>
+                        <div class="col-md-2">
+                            <label>Action</label>
+                        </div>
+                    </div>
+                    @if (Model.OrderDetails != null && Model.OrderDetails.Any())
+                    {
+                        for (int i = 0; i < Model.OrderDetails.Count; i++)
+                        {
+                            <div class="row order-detail-row" style="margin-bottom: 10px;">
+                                <div class="col-md-4">
+                                    <select name="OrderDetails[@i].ItemID" class="form-control item-select" data-index="@i">
+                                        <option value="0">-- Select Product --</option>
+                                        @foreach (var item in items)
+                                        {
+                                            <option value="@item.ItemID" data-price="@item.UnitPrice" @(item.ItemID == Model.OrderDetails[i].ItemID ? "selected" : "")>@item.ItemName</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" name="OrderDetails[@i].UnitAmount" class="form-control unit-price" readonly value="@Model.OrderDetails[i].UnitAmount" data-index="@i" />
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" name="OrderDetails[@i].Quantity" class="form-control" min="1" value="@Model.OrderDetails[i].Quantity" />
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" class="btn btn-danger btn-sm remove-detail">Remove</button>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="row order-detail-row" style="margin-bottom: 10px;">
+                            <div class="col-md-4">
+                                <select name="OrderDetails[0].ItemID" class="form-control item-select" data-index="0">
+                                    <option value="0">-- Select Product --</option>
+                                    @foreach (var item in items)
+                                    {
+                                        <option value="@item.ItemID" data-price="@item.UnitPrice">@item.ItemName</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" name="OrderDetails[0].UnitAmount" class="form-control unit-price" readonly data-index="0" />
+                            </div>
+                            <div class="col-md-3">
+                                <input type="number" name="OrderDetails[0].Quantity" class="form-control" min="1" value="1" />
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-danger btn-sm remove-detail" style="display:none;">Remove</button>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <button type="button" id="addDetail" class="btn btn-info btn-sm" style="margin-top: 10px;">Add Item</button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default" })
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        var detailIndex = @(Model.OrderDetails != null ? Model.OrderDetails.Count : 1);
+        var itemsData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(items));
+
+        $(document).ready(function() {
+            // Handle item selection
+            $(document).on('change', '.item-select', function() {
+                var selectedOption = $(this).find('option:selected');
+                var price = selectedOption.data('price');
+                var index = $(this).data('index');
+                $('input[name="OrderDetails[' + index + '].UnitAmount"]').val(price || '');
+            });
+
+            // Add new detail row
+            $('#addDetail').click(function() {
+                var newRow = $('<div class="row order-detail-row" style="margin-bottom: 10px;"></div>');
+                
+                var itemSelect = '<div class="col-md-4"><select name="OrderDetails[' + detailIndex + '].ItemID" class="form-control item-select" data-index="' + detailIndex + '">';
+                itemSelect += '<option value="0">-- Select Product --</option>';
+                itemsData.forEach(function(item) {
+                    itemSelect += '<option value="' + item.ItemID + '" data-price="' + item.UnitPrice + '">' + item.ItemName + '</option>';
+                });
+                itemSelect += '</select></div>';
+                
+                var priceInput = '<div class="col-md-3"><input type="text" name="OrderDetails[' + detailIndex + '].UnitAmount" class="form-control unit-price" readonly data-index="' + detailIndex + '" /></div>';
+                var quantityInput = '<div class="col-md-3"><input type="number" name="OrderDetails[' + detailIndex + '].Quantity" class="form-control" min="1" value="1" /></div>';
+                var removeButton = '<div class="col-md-2"><button type="button" class="btn btn-danger btn-sm remove-detail">Remove</button></div>';
+                
+                newRow.append(itemSelect + priceInput + quantityInput + removeButton);
+                $('#orderDetailsContainer').append(newRow);
+                
+                detailIndex++;
+                updateRemoveButtons();
+            });
+
+            // Remove detail row
+            $(document).on('click', '.remove-detail', function() {
+                $(this).closest('.order-detail-row').remove();
+                updateRemoveButtons();
+            });
+
+            function updateRemoveButtons() {
+                var rows = $('.order-detail-row').length - 1; // Exclude header row
+                if (rows <= 1) {
+                    $('.remove-detail').hide();
+                } else {
+                    $('.remove-detail').show();
+                }
+            }
+
+            updateRemoveButtons();
+        });
+    </script>
+}

@@ -1,0 +1,78 @@
+@model IEnumerable<OrderManagementWeb.Models.ItemPurchasedViewModel>
+
+@{
+    ViewBag.Title = "Items Purchased by Customer";
+}
+
+<h2>Items Purchased by Customer</h2>
+
+<div class="panel panel-default" style="margin-bottom: 20px;">
+    <div class="panel-body">
+        @using (Html.BeginForm("ItemsPurchasedByCustomer", "Reports", FormMethod.Get, new { @class = "form-inline" }))
+        {
+            <div class="form-group">
+                <label for="agentId">Select Customer:</label>
+                @Html.DropDownList("agentId", ViewBag.AgentID as SelectList, "-- Select Customer --", new { @class = "form-control" })
+            </div>
+            <button type="submit" class="btn btn-primary" style="margin-left: 10px;">View</button>
+        }
+    </div>
+</div>
+
+@if (ViewBag.AgentName != null)
+{
+    <h4>Customer: @ViewBag.AgentName</h4>
+}
+
+@if (Model.Any())
+{
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Item Name</th>
+                <th>Size</th>
+                <th>Total Quantity</th>
+                <th>Total Spent</th>
+                <th>Last Purchase Date</th>
+                <th>Number of Purchases</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.ItemName</td>
+                    <td>@item.Size</td>
+                    <td>@item.TotalQuantity</td>
+                    <td>@item.TotalSpent.ToString("C")</td>
+                    <td>@item.LastPurchaseDate.ToString("MM/dd/yyyy")</td>
+                    <td>@item.PurchaseCount</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="2" class="text-right">Totals:</th>
+                <th>@Model.Sum(x => x.TotalQuantity)</th>
+                <th>@Model.Sum(x => x.TotalSpent).ToString("C")</th>
+                <th colspan="2"></th>
+            </tr>
+        </tfoot>
+    </table>
+}
+else if (ViewBag.AgentName != null)
+{
+    <div class="alert alert-info">
+        <strong>No purchases found.</strong> This customer has not made any purchases yet.
+    </div>
+}
+else
+{
+    <div class="alert alert-warning">
+        <strong>Please select a customer</strong> to view their purchase history.
+    </div>
+}
+
+<p>
+    @Html.ActionLink("Back to Reports", "Index", null, new { @class = "btn btn-default" })
+</p>

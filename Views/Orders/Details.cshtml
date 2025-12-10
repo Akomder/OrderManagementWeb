@@ -1,0 +1,62 @@
+@model OrderManagementWeb.Order
+
+@{
+    ViewBag.Title = "Order Details";
+}
+
+<h2>Order Details</h2>
+
+<div>
+    <h4>Order Information</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>Order ID</dt>
+        <dd>@Model.OrderID</dd>
+
+        <dt>Order Date</dt>
+        <dd>@Model.OrderDate.ToString("MM/dd/yyyy")</dd>
+
+        <dt>Agent Name</dt>
+        <dd>@Model.Agent.AgentName</dd>
+
+        <dt>Agent Address</dt>
+        <dd>@Model.Agent.Address</dd>
+    </dl>
+
+    <h4>Order Items</h4>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Item Name</th>
+                <th>Size</th>
+                <th>Unit Price</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var detail in Model.OrderDetails)
+            {
+                <tr>
+                    <td>@detail.Item.ItemName</td>
+                    <td>@detail.Item.Size</td>
+                    <td>@detail.UnitAmount.ToString("C")</td>
+                    <td>@detail.Quantity</td>
+                    <td>@((detail.UnitAmount * detail.Quantity).ToString("C"))</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="4" class="text-right">Total:</th>
+                <th>@Model.OrderDetails.Sum(od => od.UnitAmount * od.Quantity).ToString("C")</th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.OrderID }, new { @class = "btn btn-warning" })
+    @Html.ActionLink("Print", "Print", new { id = Model.OrderID }, new { @class = "btn btn-success", target = "_blank" })
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default" })
+</p>
